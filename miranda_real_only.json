@@ -1,0 +1,15 @@
+{
+  "type": "micro",
+  "wake_word": "Миранда",
+  "author": "Alexander Samusevich",
+  "model": "miranda_real_only.tflite",
+  "trained_languages": ["ru"],
+  "version": 2,
+  "micro": {
+    "probability_cutoff": 0.5,
+    "feature_step_size": 10,
+    "sliding_window_size": 5,
+    "tensor_arena_size": 26080,
+    "minimum_esphome_version": "2024.7.0"
+  }
+}

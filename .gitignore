@@ -1,0 +1,47 @@
+# Python / environment
+.venv/
+__pycache__/
+*.pyc
+
+# OS / IDE
+.DS_Store
+.idea/
+
+# Vendored third-party projects (installed editable in .venv; clone separately, see README)
+/micro-wake-word/
+/piper-sample-generator/
+
+# Piper TTS voices (large, downloaded separately)
+/voices/
+
+# Downloaded augmentation / negative audio datasets
+/mit_rirs/
+/audioset_16k/
+/fma/
+/fma_16k/
+/negative_datasets/
+
+# Generated / recorded positive samples and intermediate splits
+/synthetic_samples/
+/positive_samples/
+/positive_samples_real/
+/multi_word_raw/
+/multi_word_raw2/
+/multi_word_sliced/
+/multi_word_sliced2/
+/resplit_out*/
+/one_file_resplit*/
+/holdout_real/
+/holdout_real_fresh/
+/test_samples/
+
+# Generated spectrogram features (RaggedMmap)
+/generated_augmented_features/
+/generated_augmented_features_real/
+/holdout_real_features/
+
+# Training runs (checkpoints, TensorBoard logs) - final .tflite/.json are committed at repo root
+/trained_models/
+
+# Ad-hoc run logs
+*.log
