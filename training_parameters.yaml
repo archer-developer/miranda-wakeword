@@ -1,6 +1,9 @@
 window_step_ms: 10
 
-train_dir: trained_models/miranda
+# New dir on purpose: model_train_eval restores the latest checkpoint from
+# <train_dir>/restore/, so reusing trained_models/miranda would silently
+# continue the old 3000-step run instead of training from scratch.
+train_dir: trained_models/miranda_v2
 
 features:
   - features_dir: generated_augmented_features
@@ -39,21 +42,54 @@ features:
     truth: false
     truncation_strategy: split
     type: mmap
+  # --- Our own negatives (build with build_negative_features.py). ---------
+  # Uncomment once the dirs exist: an empty feature dir only logs a warning
+  # but sampling from it with a nonzero weight fails.
+  # Home audio: Russian TV, household speech, music, Voice PE false-accept
+  # snippets (eval_false_accepts.py --dump-dir). penalty_weight > 1 because
+  # these are exactly the mistakes we are trying to stop making. Build with
+  # --eval-fraction 0.2 so part of it also feeds the FA/h checkpoint metric.
+  # - features_dir: negative_features_home
+  #   sampling_weight: 10.0
+  #   penalty_weight: 3.0
+  #   truth: false
+  #   truncation_strategy: random
+  #   type: mmap
+  # Adversarial TTS phrases (adversarial_phrases_ru.txt): Марина, веранда, ...
+  # - features_dir: negative_features_adversarial
+  #   sampling_weight: 5.0
+  #   penalty_weight: 2.0
+  #   truth: false
+  #   truncation_strategy: random
+  #   type: mmap
 
-training_steps: [3000]
+# 3000 steps was well below microWakeWord's own notebook (10000) and its
+# train.py default (20000); an undertrained model separates "Миранда" from
+# arbitrary speech poorly, which shows up as false accepts on TV/talk.
+# Second phase at a lower learning rate to settle the weights.
+training_steps: [20000, 5000]
 positive_class_weight: [1]
 negative_class_weight: [20]
-learning_rates: [0.001]
+learning_rates: [0.001, 0.0002]
 batch_size: 128
 
-time_mask_max_size: [0]
-time_mask_count: [0]
-freq_mask_max_size: [0]
-freq_mask_count: [0]
+# SpecAugment (masks random time/frequency bands of the spectrogram) - the
+# train.py defaults. With only ~15 real positives the model otherwise
+# memorizes those exact recordings; masking makes it rely on the word itself.
+time_mask_max_size: [5]
+time_mask_count: [2]
+freq_mask_max_size: [5]
+freq_mask_count: [2]
 
 eval_step_interval: 500
 clip_duration_ms: 1500
 
+# Checkpoint selection. average_viable_recall is already FA-aware (recall
+# averaged over the 0..2 FA/h region of the ambient set), but the ambient set
+# is only dinner_party_eval (English) unless negative_features_home above is
+# enabled with validation_ambient/testing_ambient - do that first, it matters
+# more than this knob. The training log line "no faph cutoff is X" is a good
+# first guess for probability_cutoff.
 target_minimization: 0.9
 minimization_metric: null
 maximization_metric: average_viable_recall
