@@ -1,0 +1,52 @@
+# Adversarial negatives for "Миранда": words/phrases that share its stress
+# pattern (ми-РАН-да), its "-анда/-ада" ending, or its "Мир-/Мар-" onset.
+# Synthesize each line with TTS (Piper / Gemini voices, see CLAUDE.md step 2b)
+# into adversarial_samples/ and build them with build_negative_features.py.
+# The model must learn to reject these, which forces it to look at the whole
+# word instead of firing on any 3-syllable word ending in a stressed "-анда".
+# Lines starting with '#' are ignored. Deliberately NOT included: inflected
+# forms of the wake word itself (Миранды, Миранде, Мирандочка) - those are
+# arguably real calls to the assistant.
+Марина
+Мирон
+Миран
+Мира
+Мирно
+мир
+рана
+Аманда
+Ванда
+Рамада
+Рамадан
+Миланда
+Маринад
+Розалинда
+Линда
+веранда
+команда
+пропаганда
+Уганда
+Голландия
+Голландка
+бригада
+баррикада
+громада
+лимонада
+шоколада
+не надо
+Мира, иди сюда
+мир и правда
+на веранде
+моя команда
+привет, Марина
+Марина, ты где
+Амиран
+Миранов
+Ирландия
+Ирина
+Мира рада
+мы рады
+Мирные
+Миллиард
+ми-ми-ми
+Рената

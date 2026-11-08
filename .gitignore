@@ -45,3 +45,9 @@ __pycache__/
 
 # Ad-hoc run logs
 *.log
+
+# Own negative recordings / adversarial TTS / their features / FA dumps
+/negative_recordings*/
+/adversarial_samples/
+/negative_features_*/
+/fa_dumps/
